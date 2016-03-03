@@ -1,0 +1,132 @@
+package a2.login;
+
+import a2.common.exception.AuthenticationFailedException;
+import a2.common.exception.DatabaseConnectionException;
+import a2.common.ioc.AppBean;
+import a2.common.ioc.BeanHolder;
+import a2.common.ui.ModalController;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+/**
+ * Controller handling view related logic for login activities.
+ *
+ * @since 1.0.0
+ */
+public class LoginFxViewController implements Initializable, AppBean {
+
+    private static final String DEFAULT_DB_ADDRESS = "192.168.99.100";
+
+    @FXML private TextField userNameTextField;
+    @FXML private PasswordField passwordTextField;
+    @FXML private Label userNameErrorLabel;
+    @FXML private Label passwordErrorLabel;
+    @FXML private TextField databaseAddressTextField;
+    @FXML private Label databaseErrorLabel;
+
+    private LoginController loginController;
+
+    public void initialize(URL location, ResourceBundle resources) {
+        resetAllControls();
+        loginController = (LoginController) BeanHolder.getBean(LoginController.class.getSimpleName());
+    }
+
+    public void loginButtonFired(ActionEvent actionEvent) {
+        LoginForm loginForm = new LoginForm();
+        loginForm.setUserName(userNameTextField.getText());
+        loginForm.setPassword(passwordTextField.getText());
+        loginForm.setDatabaseAddress(databaseAddressTextField.getText());
+
+        LoginFormValidationResult validationResult = loginController.validateForm(loginForm);
+        if (!validationResult.isValid()) {
+            if (validationResult.getMessages().containsKey(LoginForm.KEY_USERNAME)) {
+                userNameErrorLabel.setVisible(true);
+                userNameErrorLabel.setText(validationResult.getMessages().get(LoginForm.KEY_USERNAME));
+            }
+
+            if (validationResult.getMessages().containsKey(LoginForm.KEY_PASSWORD)) {
+                passwordErrorLabel.setVisible(true);
+                passwordErrorLabel.setText(validationResult.getMessages().get(LoginForm.KEY_PASSWORD));
+            }
+
+            if (validationResult.getMessages().containsKey(LoginForm.KEY_DB_ADDR)) {
+                databaseErrorLabel.setVisible(true);
+                databaseErrorLabel.setText(validationResult.getMessages().get(LoginForm.KEY_DB_ADDR));
+            }
+
+            return;
+        }
+
+        try {
+            loginController.authenticate(loginForm);
+            ModalController.createModal(
+                    "Success",
+                    "You have been logged in",
+                    ((Node) actionEvent.getSource()).getScene().getWindow(),
+                    () -> launchNextScreen((Stage) ((Node) actionEvent.getSource()).getScene().getWindow()));
+
+        } catch (AuthenticationFailedException ex) {
+            ModalController.createModal(
+                    "Error",
+                    "Your credentials did not match the records",
+                    ((Node) actionEvent.getSource()).getScene().getWindow(),
+                    () -> {});
+        } catch (DatabaseConnectionException ex2) {
+            ModalController.createModal(
+                    "Error",
+                    "Could not contact database",
+                    ((Node) actionEvent.getSource()).getScene().getWindow(),
+                    () -> {});
+        }
+    }
+
+    public void resetButtonFired(ActionEvent actionEvent) {
+        resetAllControls();
+    }
+
+    public void launchNextScreen(Stage primaryStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/choice.fxml"));
+            Parent root = loader.load();
+            primaryStage.setTitle("Choose app");
+            primaryStage.setScene(new Scene(root, 800, 130));
+            primaryStage.show();
+        } catch (Exception ex) {
+            throw new RuntimeException("Failed to load view file.");
+        }
+
+    }
+
+    private void resetAllControls() {
+        userNameTextField.setText("");
+        passwordTextField.setText("");
+        userNameErrorLabel.setText("");
+        userNameErrorLabel.setVisible(false);
+        passwordErrorLabel.setText("");
+        passwordErrorLabel.setVisible(false);
+
+        databaseAddressTextField.setText(DEFAULT_DB_ADDRESS);
+        databaseErrorLabel.setText("");
+        databaseErrorLabel.setVisible(false);
+    }
+
+    public LoginController getLoginController() {
+        return loginController;
+    }
+
+    public void setLoginController(LoginController loginController) {
+        this.loginController = loginController;
+    }
+}

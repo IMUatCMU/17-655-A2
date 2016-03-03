@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="a2.login.LoginFxViewController">
+   <children>
+      <GridPane hgap="10.0" layoutX="131.0" layoutY="143.0" prefHeight="107.0" prefWidth="617.0" vgap="10.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="118.0" minWidth="10.0" prefWidth="70.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="230.0" minWidth="10.0" prefWidth="217.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="153.0" minWidth="10.0" prefWidth="134.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+         </padding>
+         <children>
+            <Label text="Username" />
+            <TextField id="userNameTextField" fx:id="userNameTextField" GridPane.columnIndex="1" />
+            <Label text="Password" GridPane.rowIndex="1" />
+            <Label id="userNameErrorLabel" fx:id="userNameErrorLabel" prefHeight="17.0" prefWidth="198.0" text="Username error" textFill="#e80909" GridPane.columnIndex="2" />
+            <Label id="passwordErrorLabel" fx:id="passwordErrorLabel" prefHeight="17.0" prefWidth="203.0" text="Password error" textFill="#e80909" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <PasswordField id="passwordTextField" fx:id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+      <Label layoutX="131.0" layoutY="114.0" prefHeight="29.0" prefWidth="122.0" text="Welcome">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <GridPane hgap="10.0" layoutX="131.0" layoutY="250.0" prefHeight="60.0" prefWidth="617.0" vgap="10.0">
+         <children>
+            <Label prefHeight="17.0" prefWidth="122.0" text="Database Address" />
+            <TextField id="databaseAddressTextField" fx:id="databaseAddressTextField" prefHeight="27.0" prefWidth="139.0" text="192.168.99.100" GridPane.columnIndex="1" />
+            <Label id="databaseErrorLabel" fx:id="databaseErrorLabel" prefHeight="17.0" prefWidth="184.0" text="Database address error" textFill="#e80909" GridPane.columnIndex="2" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.0" minWidth="10.0" prefWidth="120.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="230.0" minWidth="10.0" prefWidth="146.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="173.0" />
+         </columnConstraints>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+         </padding>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+      <Button id="loginButton" fx:id="loginButton" layoutX="131.0" layoutY="357.0" mnemonicParsing="false" onAction="#loginButtonFired" text="Login" />
+      <Button id="resetButton" fx:id="resetButton" layoutX="192.0" layoutY="357.0" mnemonicParsing="false" onAction="#resetButtonFired" text="Reset" />
+   </children>
+</Pane>

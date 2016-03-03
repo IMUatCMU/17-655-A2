@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="a2.inventory.InventoryFxViewController">
+   <children>
+      <Label layoutX="14.0" layoutY="143.0" text="Product Description">
+         <padding>
+            <Insets right="10.0" />
+         </padding>
+      </Label>
+      <Label layoutX="14.0" layoutY="31.0" text="Product ID">
+         <padding>
+            <Insets bottom="10.0" right="10.0" />
+         </padding>
+      </Label>
+      <Label layoutX="14.0" layoutY="66.0" text="Price">
+         <padding>
+            <Insets right="10.0" />
+         </padding>
+      </Label>
+      <Label layoutX="14.0" layoutY="102.0" text="Quantity">
+         <padding>
+            <Insets right="10.0" />
+         </padding>
+      </Label>
+      <TextField fx:id="productIdTextField" layoutX="145.0" layoutY="26.0" prefHeight="27.0" prefWidth="176.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </TextField>
+      <TextField fx:id="priceTextField" layoutX="145.0" layoutY="61.0" prefHeight="27.0" prefWidth="176.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </TextField>
+      <TextField fx:id="quantityTextField" layoutX="145.0" layoutY="97.0" prefHeight="27.0" prefWidth="176.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </TextField>
+      <TextArea fx:id="productDescriptionTextField" layoutX="146.0" layoutY="143.0" prefHeight="109.0" prefWidth="267.0" />
+      <Separator layoutX="438.0" layoutY="17.0" orientation="VERTICAL" prefHeight="235.0" prefWidth="7.0" />
+      <Separator layoutX="16.0" layoutY="279.0" prefHeight="11.0" prefWidth="968.0" />
+      <VBox layoutX="450.0" layoutY="19.0" prefHeight="235.0" prefWidth="167.0">
+         <children>
+            <RadioButton fx:id="treesRadio" mnemonicParsing="false" text="Trees">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </RadioButton>
+            <RadioButton fx:id="seedsRadio" mnemonicParsing="false" text="Seeds">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </RadioButton>
+            <RadioButton fx:id="shurbsRadio" mnemonicParsing="false" text="Shrubs">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </RadioButton>
+            <RadioButton fx:id="cultureBoxesRadio" mnemonicParsing="false" text="Culture Boxes">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </RadioButton>
+            <RadioButton fx:id="genomicsRadio" mnemonicParsing="false" text="Genomics">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </RadioButton>
+            <RadioButton fx:id="processingRadio" mnemonicParsing="false" text="Processing">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </RadioButton>
+            <RadioButton fx:id="referenceMaterialRadio" mnemonicParsing="false" text="Reference Material" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+      <VBox layoutX="611.0" layoutY="19.0" prefHeight="200.0" prefWidth="376.0">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+         <children>
+            <Button mnemonicParsing="false" onAction="#addItemButtonFired" prefHeight="27.0" prefWidth="355.0" text="Add Item">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#listItemsButtonFired" prefHeight="27.0" prefWidth="366.0" text="List Items">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#deleteItemButtonFired" prefHeight="27.0" prefWidth="357.0" text="Delete Item (selected from list)">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#decrementButtonFired" prefHeight="27.0" prefWidth="355.0" text="Decrement (inventory count of selected item in list)" />
+         </children>
+      </VBox>
+      <ListView fx:id="inventoryListView" layoutX="16.0" layoutY="300.0" prefHeight="476.0" prefWidth="968.0" />
+   </children>
+   <opaqueInsets>
+      <Insets right="10.0" />
+   </opaqueInsets>
+</Pane>
