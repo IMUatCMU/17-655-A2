@@ -50,7 +50,6 @@ public class InventoryDao extends BasicDao implements AppBean {
             Statement statement = getDatabaseConnection().createStatement();
             String query = String.format("INSERT INTO `%s`(`product_code`, `description`, `quantity`, `price`) VALUES ('%s', '%s', %s, %s)",
                     itemTableName, code, description, quantity, price);
-            System.out.println(query);
             statement.executeUpdate(query);
         } catch (Exception ex) {
             throw new DatabaseConnectionException(ex);

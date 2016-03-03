@@ -16,6 +16,5 @@
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.28" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.4" level="project" />
     <orderEntry type="module" module-name="inventory" />
-    <orderEntry type="module" module-name="order" />
   </component>
 </module>

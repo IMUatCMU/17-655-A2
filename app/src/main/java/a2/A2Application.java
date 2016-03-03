@@ -11,6 +11,8 @@ import a2.inventory.InventoryController;
 import a2.inventory.InventoryDao;
 import a2.login.LoginController;
 import a2.login.LoginDao;
+import a2.order.OrderController;
+import a2.order.OrderDao;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -74,6 +76,8 @@ public class A2Application extends Application implements AppBean {
         BeanHolder.registry().registerBean(new ChoiceController());
         BeanHolder.registry().registerBean(new InventoryController());
         BeanHolder.registry().registerBean(new InventoryDao());
+        BeanHolder.registry().registerBean(new OrderController());
+        BeanHolder.registry().registerBean(new OrderDao());
 
         BeanHolder.getAllBeans().forEach(AppBean::afterInitialization);
     }

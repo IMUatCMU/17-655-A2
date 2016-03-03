@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="a2.order.OrderFxViewController">
+   <children>
+      <Pane layoutX="14.0" layoutY="14.0" prefHeight="772.0" prefWidth="975.0">
+         <children>
+            <Label layoutX="14.0" layoutY="14.0" text="Customer Information">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <VBox layoutX="14.0" layoutY="60.0" prefHeight="128.0" prefWidth="100.0">
+               <children>
+                  <Label text="First Name">
+                     <VBox.margin>
+                        <Insets bottom="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Last Name">
+                     <VBox.margin>
+                        <Insets bottom="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Phone #">
+                     <VBox.margin>
+                        <Insets bottom="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Address" />
+               </children>
+            </VBox>
+            <VBox layoutX="114.0" layoutY="55.0" prefHeight="271.0" prefWidth="165.0">
+               <children>
+                  <TextField fx:id="firstNameTextField">
+                     <VBox.margin>
+                        <Insets bottom="6.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField fx:id="lastNameTextFiedl">
+                     <VBox.margin>
+                        <Insets bottom="6.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField fx:id="phoneTextField">
+                     <VBox.margin>
+                        <Insets bottom="6.0" />
+                     </VBox.margin>
+                  </TextField>
+               </children>
+            </VBox>
+            <TextArea fx:id="addressTextField" layoutX="114.0" layoutY="155.0" prefHeight="143.0" prefWidth="165.0" />
+            <Separator layoutX="296.0" layoutY="40.0" orientation="VERTICAL" prefHeight="260.0" prefWidth="3.0" />
+            <HBox layoutX="315.0" layoutY="37.0" prefHeight="40.0" prefWidth="647.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#treesButtonFired" text="Trees">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#shrubsButtonFired" text="Shrubs">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#seedsButtonFired" text="Seeds">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#processingButtonFired" text="Processing">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#referenceMaterialButtonFired" text="Reference Material">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#genomicsButtonFired" text="Genomics">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#cultureBoxesButtonFired" text="Culture Boxes" />
+               </children>
+            </HBox>
+            <HBox layoutX="315.0" layoutY="77.0" prefHeight="221.0" prefWidth="647.0">
+               <children>
+                  <ListView fx:id="inventoryListView" prefHeight="221.0" prefWidth="508.0">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </ListView>
+                  <Button mnemonicParsing="false" onAction="#addToOrderButtonFired" prefHeight="139.0" prefWidth="139.0" text="Add to order" />
+               </children>
+            </HBox>
+            <Separator layoutX="14.0" layoutY="325.0" prefHeight="10.0" prefWidth="951.0" />
+            <Label layoutX="17.0" layoutY="352.0" prefHeight="23.0" prefWidth="104.0" text="Total Cost" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="totalCostLabel" layoutX="17.0" layoutY="386.0" prefHeight="40.0" prefWidth="93.0" text="\$0.00" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <ListView fx:id="itemsSelectedListView" layoutX="137.0" layoutY="375.0" prefHeight="191.0" prefWidth="631.0" />
+            <Label layoutX="137.0" layoutY="355.0" text="Items Selected" />
+            <Label layoutX="137.0" layoutY="580.0" text="Message" />
+            <TextArea fx:id="orderMessageTextArea" layoutX="137.0" layoutY="603.0" prefHeight="139.0" prefWidth="825.0" />
+            <Button layoutX="777.0" layoutY="373.0" mnemonicParsing="false" onAction="#submitOrderButtonFired" prefHeight="191.0" prefWidth="191.0" text="Submit Order" />
+         </children>
+      </Pane>
+   </children>
+</Pane>

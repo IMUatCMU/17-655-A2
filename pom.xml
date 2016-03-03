@@ -12,6 +12,7 @@
         <module>common</module>
         <module>inventory</module>
         <module>app</module>
+        <module>order</module>
     </modules>
 
     <build>
