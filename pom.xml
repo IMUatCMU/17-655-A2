@@ -13,6 +13,7 @@
         <module>inventory</module>
         <module>app</module>
         <module>order</module>
+        <module>shipping</module>
     </modules>
 
     <build>

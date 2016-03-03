@@ -13,6 +13,8 @@ import a2.login.LoginController;
 import a2.login.LoginDao;
 import a2.order.OrderController;
 import a2.order.OrderDao;
+import a2.shipping.ShippingController;
+import a2.shipping.ShippingDao;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -78,6 +80,8 @@ public class A2Application extends Application implements AppBean {
         BeanHolder.registry().registerBean(new InventoryDao());
         BeanHolder.registry().registerBean(new OrderController());
         BeanHolder.registry().registerBean(new OrderDao());
+        BeanHolder.registry().registerBean(new ShippingController());
+        BeanHolder.registry().registerBean(new ShippingDao());
 
         BeanHolder.getAllBeans().forEach(AppBean::afterInitialization);
     }
