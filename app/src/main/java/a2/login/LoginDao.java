@@ -19,7 +19,7 @@ public class LoginDao extends BasicDao implements AppBean {
 
     @Override
     protected String databaseName() {
-        return "users";
+        return "eep_leaftech";
     }
 
     public Authentication getAuthentication(String userName) {
