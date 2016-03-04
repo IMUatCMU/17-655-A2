@@ -3,6 +3,7 @@ package a2.inventory;
 import a2.common.exception.DatabaseConnectionException;
 import a2.common.exception.DuplicateItemException;
 import a2.common.ioc.BeanHolder;
+import a2.common.model.Product;
 import a2.common.ui.ModalController;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -93,19 +94,19 @@ public class InventoryFxViewController implements Initializable {
         form.setPrice(priceTextField.getText());
         form.setQuantity(quantityTextField.getText());
         if (treesRadio.isSelected())
-            form.setItemName(InventoryController.TREE);
+            form.setProduct(Product.TREE);
         else if (shurbsRadio.isSelected())
-            form.setItemName(InventoryController.SHRUB);
+            form.setProduct(Product.SHRUB);
         else if (seedsRadio.isSelected())
-            form.setItemName(InventoryController.SEED);
+            form.setProduct(Product.SEED);
         else if (referenceMaterialRadio.isSelected())
-            form.setItemName(InventoryController.REF_MATERIAL);
+            form.setProduct(Product.REF_MATERIAL);
         else if (processingRadio.isSelected())
-            form.setItemName(InventoryController.PROCESSING);
+            form.setProduct(Product.PROCESSING);
         else if (genomicsRadio.isSelected())
-            form.setItemName(InventoryController.GENOMICS);
+            form.setProduct(Product.GENOMICS);
         else if (cultureBoxesRadio.isSelected())
-            form.setItemName(InventoryController.CULTUREBOXES);
+            form.setProduct(Product.CULTUREBOXES);
 
         AddItemValidationResult validationResult = inventoryController.validateAddItem(form);
         if (!validationResult.isValid()) {
@@ -173,7 +174,6 @@ public class InventoryFxViewController implements Initializable {
         }
 
         form.setCode(inventoryListView.getSelectionModel().getSelectedItem().getCode());
-        form.setItem(identityRadioGroupControllerValue());
         try {
             inventoryController.deleteItem(form);
             ModalController.createModal("Success",
@@ -202,7 +202,6 @@ public class InventoryFxViewController implements Initializable {
         }
 
         form.setCode(inventoryListView.getSelectionModel().getSelectedItem().getCode());
-        form.setItem(identityRadioGroupControllerValue());
 
         try {
             inventoryController.decrementInventory(form);
@@ -213,24 +212,5 @@ public class InventoryFxViewController implements Initializable {
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
                     () -> {});
         }
-    }
-
-    private String identityRadioGroupControllerValue() {
-        if (treesRadio.isSelected())
-            return InventoryController.TREE;
-        else if (shurbsRadio.isSelected())
-            return InventoryController.SHRUB;
-        else if (seedsRadio.isSelected())
-            return InventoryController.SEED;
-        else if (referenceMaterialRadio.isSelected())
-            return InventoryController.REF_MATERIAL;
-        else if (processingRadio.isSelected())
-            return InventoryController.PROCESSING;
-        else if (genomicsRadio.isSelected())
-            return InventoryController.GENOMICS;
-        else if (cultureBoxesRadio.isSelected())
-            return InventoryController.CULTUREBOXES;
-        else
-            return "";
     }
 }

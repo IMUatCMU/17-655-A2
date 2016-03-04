@@ -1,5 +1,7 @@
 package a2.inventory;
 
+import a2.common.model.Product;
+
 /**
  * @author Weinan Qiu
  * @since 1.0.0
@@ -16,7 +18,7 @@ public class AddItemForm {
     private String price;
     private String quantity;
     private String description;
-    private String itemName;
+    private Product product;
 
     public String getCode() {
         return code;
@@ -50,11 +52,11 @@ public class AddItemForm {
         this.description = description;
     }
 
-    public String getItemName() {
-        return itemName;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

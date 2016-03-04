@@ -4,6 +4,7 @@ import a2.common.exception.DuplicateItemException;
 import a2.common.exception.NegativeStockException;
 import a2.common.ioc.AppBean;
 import a2.common.ioc.BeanHolder;
+import a2.common.model.Product;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.stylesheets.LinkStyle;
 
@@ -14,14 +15,6 @@ import java.util.List;
  * @since 1.0.0
  */
 public class InventoryController implements AppBean {
-
-    public static final String TREE = "TREE";
-    public static final String SHRUB = "SHRUB";
-    public static final String SEED = "SEED";
-    public static final String REF_MATERIAL = "REF_MATERIAL";
-    public static final String PROCESSING = "PROCESSING";
-    public static final String GENOMICS = "GENOMICS";
-    public static final String CULTUREBOXES = "CULTUREBOXES";
 
     private InventoryDao inventoryDao;
 
@@ -48,7 +41,7 @@ public class InventoryController implements AppBean {
             result.getMessages().put(AddItemForm.PRICE, "invalid product price");
         if (!NumberUtils.isNumber(addItemForm.getQuantity()))
             result.getMessages().put(AddItemForm.QUANTITY, "invalid product quantity");
-        if (addItemForm.getItemName() == null)
+        if (addItemForm.getProduct() == null)
             result.getMessages().put(AddItemForm.ITEM, "please select an inventory category");
 
         if (result.getMessages().size() == 0)
@@ -59,8 +52,7 @@ public class InventoryController implements AppBean {
 
     public void addItem(AddItemForm addItemForm) {
         long count = 0;
-        String tableName = identifyTableName(addItemForm.getItemName());
-        count = inventoryDao.countForInventory(tableName, addItemForm.getCode());
+        count = inventoryDao.countForInventory(addItemForm.getCode());
 
         if (count > 0)
             throw new DuplicateItemException();
@@ -70,67 +62,46 @@ public class InventoryController implements AppBean {
                 addItemForm.getDescription(),
                 addItemForm.getQuantity(),
                 addItemForm.getPrice(),
-                tableName);
+                addItemForm.getProduct());
     }
 
     public void deleteItem(DeleteItemForm form) {
-        String tableName = identifyTableName(form.getItem());
-        inventoryDao.deleteInventory(form.getCode(), tableName);
+        inventoryDao.deleteInventory(form.getCode());
     }
 
     public void decrementInventory(DecrementInventoryForm form) {
-        String tableName = identifyTableName(form.getItem());
-        long currentStock = inventoryDao.countForInventory(tableName, form.getCode());
+        long currentStock = inventoryDao.countForInventory(form.getCode());
         if (currentStock <= 0)
             throw new NegativeStockException();
 
-        inventoryDao.decrementInventory(form.getCode(), tableName);
+        inventoryDao.decrementInventory(form.getCode());
     }
 
     public List<Inventory> getInventoryForTrees() {
-        return inventoryDao.getInventoryFor(InventoryDao.TREE);
+        return inventoryDao.getInventoryFor(Product.TREE);
     }
 
     public List<Inventory> getInventoryForShrubs() {
-        return inventoryDao.getInventoryFor(InventoryDao.SHRUB);
+        return inventoryDao.getInventoryFor(Product.SHRUB);
     }
 
     public List<Inventory> getInventoryForSeeds() {
-        return inventoryDao.getInventoryFor(InventoryDao.SEED);
+        return inventoryDao.getInventoryFor(Product.SEED);
     }
 
     public List<Inventory> getInventoryForReferenceMaterials() {
-        return inventoryDao.getInventoryFor(InventoryDao.REF_MATERIAL);
+        return inventoryDao.getInventoryFor(Product.REF_MATERIAL);
     }
 
     public List<Inventory> getInventoryForProcessing() {
-        return inventoryDao.getInventoryFor(InventoryDao.PROCESSING);
+        return inventoryDao.getInventoryFor(Product.PROCESSING);
     }
 
     public List<Inventory> getInventoryForGenomics() {
-        return inventoryDao.getInventoryFor(InventoryDao.GENOMICS);
+        return inventoryDao.getInventoryFor(Product.GENOMICS);
     }
 
     public List<Inventory> getInventoryForCultureBoxes() {
-        return inventoryDao.getInventoryFor(InventoryDao.CULTUREBOXES);
-    }
-
-    private String identifyTableName(String item) {
-        if (TREE.equals(item))
-            return InventoryDao.TREE;
-        else if (SHRUB.equals(item))
-            return  InventoryDao.SHRUB;
-        else if (SEED.equals(item))
-            return  InventoryDao.SEED;
-        else if (REF_MATERIAL.equals(item))
-            return  InventoryDao.REF_MATERIAL;
-        else if (PROCESSING.equals(item))
-            return  InventoryDao.PROCESSING;
-        else if (GENOMICS.equals(item))
-            return  InventoryDao.GENOMICS;
-        else if (CULTUREBOXES.equals(item))
-            return InventoryDao.CULTUREBOXES;
-        else
-            return null;
+        return inventoryDao.getInventoryFor(Product.CULTUREBOXES);
     }
 }

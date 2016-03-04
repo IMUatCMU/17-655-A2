@@ -3,6 +3,7 @@ package a2.inventory;
 import a2.common.dao.BasicDao;
 import a2.common.exception.DatabaseConnectionException;
 import a2.common.ioc.AppBean;
+import a2.common.model.Product;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -16,23 +17,15 @@ import java.util.List;
  */
 public class InventoryDao extends BasicDao implements AppBean {
 
-    public static final String TREE = "trees";
-    public static final String SHRUB = "shrubs";
-    public static final String SEED = "seeds";
-    public static final String REF_MATERIAL = "referencematerials";
-    public static final String PROCESSING = "processing";
-    public static final String GENOMICS = "genomics";
-    public static final String CULTUREBOXES = "cultureboxes";
-
     @Override
     protected String databaseName() {
-        return "inventory";
+        return "eep_leaftech";
     }
 
-    public long countForInventory(String itemTableName, String code) {
+    public long countForInventory(String code) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("SELECT COUNT(*) FROM `%s` WHERE `product_code` = '%s'", itemTableName, code);
+            String query = String.format("SELECT SUM(`quantity`) FROM `products` WHERE `id` = '%s'", code);
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
@@ -45,48 +38,48 @@ public class InventoryDao extends BasicDao implements AppBean {
         return 0l;
     }
 
-    public void insertInventory(String code, String description, String quantity, String price, String itemTableName) {
+    public void insertInventory(String code, String description, String quantity, String price, Product product) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("INSERT INTO `%s`(`product_code`, `description`, `quantity`, `price`) VALUES ('%s', '%s', %s, %s)",
-                    itemTableName, code, description, quantity, price);
+            String query = String.format("INSERT INTO `products`(`id`, `description`, `quantity`, `price`, `type`) VALUES ('%s', '%s', %s, %s, '%s')",
+                    code, description, quantity, price, product.getDatabaseValue());
             statement.executeUpdate(query);
         } catch (Exception ex) {
             throw new DatabaseConnectionException(ex);
         }
     }
 
-    public void deleteInventory(String code, String itemTableName) {
+    public void deleteInventory(String code) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("DELETE FROM `%s` WHERE `product_code` = '%s'", itemTableName, code);
+            String query = String.format("DELETE FROM `products` WHERE `id` = '%s'", code);
             statement.executeUpdate(query);
         } catch (Exception ex) {
             throw new DatabaseConnectionException(ex);
         }
     }
 
-    public void decrementInventory(String code, String itemTableName) {
+    public void decrementInventory(String code) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("UPDATE `%s` SET `quantity` = `quantity` - 1 WHERE `product_code` = '%s'", itemTableName, code);
+            String query = String.format("UPDATE `products` SET `quantity` = `quantity` - 1 WHERE `id` = '%s'", code);
             statement.executeUpdate(query);
         } catch (Exception ex) {
             throw new DatabaseConnectionException(ex);
         }
     }
 
-    public List<Inventory> getInventoryFor(String itemTableName) {
+    public List<Inventory> getInventoryFor(Product product) {
         List<Inventory> results = new ArrayList<>();
 
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("SELECT * FROM `%s`", itemTableName);
+            String query = String.format("SELECT * FROM `products` WHERE `type` = '%s'", product.getDatabaseValue());
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
                 Inventory inventory = new Inventory();
-                inventory.setCode(resultSet.getString("product_code"));
+                inventory.setCode(resultSet.getString("id"));
                 inventory.setDescription(resultSet.getString("description"));
                 inventory.setQuantity(resultSet.getLong("quantity"));
                 inventory.setPrice(resultSet.getBigDecimal("price"));
