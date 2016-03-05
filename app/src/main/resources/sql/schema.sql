@@ -68,7 +68,8 @@ INSERT INTO `users` (`userid`, `username`, `password`, `inventoryflag`, `orderfl
 VALUES
   (1,'inventoryuser','$2a$04$v0l1Ve7PIKqGHQmmwksTpO.FxzASlEsrYeM8B8QCom2DVptKwzDRu',1,0,0),
   (2,'orderuser','$2a$04$v0l1Ve7PIKqGHQmmwksTpO.FxzASlEsrYeM8B8QCom2DVptKwzDRu', 0,1,0),
-  (3,'shippinguser','$2a$04$v0l1Ve7PIKqGHQmmwksTpO.FxzASlEsrYeM8B8QCom2DVptKwzDRu',0,0,1);
+  (3,'shippinguser','$2a$04$v0l1Ve7PIKqGHQmmwksTpO.FxzASlEsrYeM8B8QCom2DVptKwzDRu',0,0,1),
+  (4,'admin','$2a$04$v0l1Ve7PIKqGHQmmwksTpO.FxzASlEsrYeM8B8QCom2DVptKwzDRu',1,1,1);
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
