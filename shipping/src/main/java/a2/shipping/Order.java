@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Order {
 
-    private String orderId;
+    private int orderId;
     private Date orderDate;
     private String firstName;
     private String lastName;
@@ -21,13 +21,12 @@ public class Order {
     private String message;
     private boolean shipped;
     private List<OrderItem> orderItems = new ArrayList<>();
-    private String orderTable;
 
-    public String getOrderId() {
+    public int getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(String orderId) {
+    public void setOrderId(int orderId) {
         this.orderId = orderId;
     }
 
@@ -95,11 +94,4 @@ public class Order {
         this.orderItems = orderItems;
     }
 
-    public String getOrderTable() {
-        return orderTable;
-    }
-
-    public void setOrderTable(String orderTable) {
-        this.orderTable = orderTable;
-    }
 }

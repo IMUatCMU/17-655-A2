@@ -19,7 +19,7 @@ public class ShippingDao extends BasicDao implements AppBean {
 
     @Override
     protected String databaseName() {
-        return "orderinfo";
+        return "eep_leaftech";
     }
 
     public List<Order> queryOrders(boolean shipped) {
@@ -32,15 +32,14 @@ public class ShippingDao extends BasicDao implements AppBean {
 
             while (resultSet.next()) {
                 Order order = new Order();
-                order.setOrderId(resultSet.getString("order_id"));
-                order.setOrderDate(resultSet.getTimestamp("order_date"));
+                order.setOrderId(resultSet.getInt("id"));
+                order.setOrderDate(resultSet.getTimestamp("date"));
                 order.setFirstName(resultSet.getString("first_name"));
                 order.setLastName(resultSet.getString("last_name"));
                 order.setAddress(resultSet.getString("address"));
                 order.setPhone(resultSet.getString("phone"));
                 order.setMessage(resultSet.getString("message"));
                 order.setShipped(resultSet.getBoolean("shipped"));
-                order.setOrderTable(resultSet.getString("ordertable"));
                 results.add(order);
             }
 
@@ -50,12 +49,16 @@ public class ShippingDao extends BasicDao implements AppBean {
         }
     }
 
-    public List<OrderItem> queryOrderItems(String orderTable) {
+    public List<OrderItem> queryOrderItems(int orderId) {
         List<OrderItem> results = new ArrayList<>();
 
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("SELECT * FROM `%s`", orderTable);
+            String query = String.format("SELECT `p`.`id` AS 'product_id', " +
+                    "`p`.`description` AS `description`, " +
+                    "`p`.`price` AS 'item_price' " +
+                    "FROM `order_items` AS `oi` INNER JOIN `products` AS `p` ON `oi`.`product_id` = `p`.`id` " +
+                    "WHERE `oi`.`order_id` = %s", orderId);
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
@@ -72,10 +75,10 @@ public class ShippingDao extends BasicDao implements AppBean {
         }
     }
 
-    public void updateOrderShippingStatus(String orderId, boolean shipped) {
+    public void updateOrderShippingStatus(int orderId, boolean shipped) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("UPDATE `orders` SET `shipped` = %s WHERE `order_id` = '%s'", shipped, orderId);
+            String query = String.format("UPDATE `orders` SET `shipped` = %s WHERE `id` = %s", shipped, orderId);
             statement.executeUpdate(query);
         } catch (Exception ex) {
             throw new DatabaseConnectionException(ex);

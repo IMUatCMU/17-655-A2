@@ -23,7 +23,6 @@ public abstract class BasicDao {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            System.out.println(connectionDetails.getConnectionUrl(databaseName()));
             databaseConnection = DriverManager.getConnection(
                     connectionDetails.getConnectionUrl(databaseName()),
                     connectionDetails.getUserName(),

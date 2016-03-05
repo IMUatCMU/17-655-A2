@@ -34,7 +34,7 @@ public class ShippingController implements AppBean {
     }
 
     public void loadOrderItems(Order order) {
-        order.setOrderItems(shippingDao.queryOrderItems(order.getOrderTable()));
+        order.setOrderItems(shippingDao.queryOrderItems(order.getOrderId()));
     }
 
     public void shipOrder(Order order) {
@@ -42,6 +42,10 @@ public class ShippingController implements AppBean {
             throw new AlreadyShippedException();
         shippingDao.updateOrderShippingStatus(order.getOrderId(), true);
 
-        // TODO. perform decrement
+        order.getOrderItems().forEach(orderItem -> {
+            DecrementInventoryForm form = new DecrementInventoryForm();
+            form.setCode(orderItem.getProductId());
+            inventoryController.decrementInventory(form);
+        });
     }
 }

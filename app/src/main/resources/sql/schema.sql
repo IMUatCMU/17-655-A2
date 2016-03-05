@@ -24,9 +24,7 @@ CREATE TABLE `orders` (
 
 CREATE TABLE `order_items` (
                     `order_id` int(10) unsigned NOT NULL,
-                    `product_cost` float(10,2),
                     `product_id` varchar(10) NOT NULL,
-                    PRIMARY KEY (`order_id`, `product_id`),
                     INDEX `product_id` (`product_id`))
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -35,7 +35,7 @@ public class OrderController implements AppBean {
             result.getMessages().put("3", "Please provide customer phone number");
         if (StringUtils.isEmpty(form.getAddress()))
             result.getMessages().put("4", "Please provide customer address");
-        if (form.getOrderItems().size() == 0)
+        if (form.getOrderItems() == null || form.getOrderItems().size() == 0)
             result.getMessages().put("5", "Cart is empty");
 
         if (result.getMessages().size() == 0)
@@ -45,10 +45,7 @@ public class OrderController implements AppBean {
     }
 
     public void submitOrder(OrderForm form) {
-        String orderDetailsTableName = String.format("order%s", System.currentTimeMillis());
-
-        orderDao.createOrderDetailsTable(orderDetailsTableName);
-        orderDao.insertOrderInfo(
+        int orderId = orderDao.insertOrderInfo(
                 new Date(),
                 form.getFirstName(),
                 form.getLastName(),
@@ -56,13 +53,8 @@ public class OrderController implements AppBean {
                 form.getAddress(),
                 form.getMessage(),
                 calculateTotalPrice(form),
-                false,
-                orderDetailsTableName);
-        form.getOrderItems().forEach(orderItem -> orderDao.insertOrderDetails(
-                orderDetailsTableName,
-                orderItem.getProductId(),
-                orderItem.getDescription(),
-                orderItem.getUnitPrice()));
+                false);
+        form.getOrderItems().forEach(orderItem -> orderDao.insertOrderDetails(orderId, orderItem.getProductId()));
     }
 
     public BigDecimal calculateTotalPrice(OrderForm form) {
