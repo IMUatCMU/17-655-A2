@@ -3,12 +3,16 @@ package a2.migration;
 import a2.common.dao.BasicDao;
 import a2.common.exception.DatabaseConnectionException;
 import a2.common.model.Product;
-import com.sun.org.apache.bcel.internal.generic.Select;
 
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Weinan Qiu
@@ -17,10 +21,20 @@ import java.util.*;
 public class DBMigration {
 
     public static final String ID = "id";
+
     public static final String DESCRIPTION = "desc";
     public static final String QUANTITY = "quantity";
     public static final String PRICE = "price";
     public static final String TYPE = "type";
+
+    public static final String DATE = "date";
+    public static final String FIRST_NAME = "first_name";
+    public static final String LAST_NAME = "last_name";
+    public static final String ADDRESS = "address";
+    public static final String PHONE = "phone";
+    public static final String TOTAL_COST = "total_cost";
+    public static final String SHIPPED = "shipped";
+    public static final String CODE = "code";
 
     public static void performMigration() {
         DBMigration migration = new DBMigration();
@@ -63,7 +77,10 @@ public class DBMigration {
     }
 
     private void doMigrateOrders() {
-
+        new SelectOrders().selectAll()
+                .stream()
+                .map(InsertOrder::new)
+                .forEach(InsertOrder::insertOrders);
     }
 
     private static class InsertInventory extends BasicDao {
@@ -101,9 +118,60 @@ public class DBMigration {
         }
     }
 
+    private static class InsertOrder extends BasicDao {
+
+        private final Map<String, Object> data;
+
+        public InsertOrder(Map<String, Object> data) {
+            this.data = data;
+        }
+
+        @Override
+        protected String databaseName() {
+            return "eep_leaftech";
+        }
+
+        public void insertOrders() {
+            try {
+                String query = String.format("INSERT INTO `orders`(`date`, `first_name`, `last_name`, `phone`, `address`, `message`, `total_cost`, `shipped`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', %s, %s)",
+                        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(data.get(DATE)),
+                        data.get(FIRST_NAME),
+                        data.get(LAST_NAME),
+                        data.get(PHONE),
+                        data.get(ADDRESS),
+                        "",
+                        data.get(TOTAL_COST),
+                        data.get(SHIPPED));
+                PreparedStatement statement = getDatabaseConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                statement.executeUpdate();
+
+                ResultSet keys = statement.getGeneratedKeys();
+                int orderId;
+                if (keys.next())
+                    orderId = keys.getInt(1);
+                else
+                    throw new Exception("Error retrieving keys after insert.");
+
+                List<String> codes = (List) data.get(CODE);
+                codes.stream()
+                        .map(s -> new ProductCodeToId(s).find())
+                        .forEach(integer -> {
+                            String query2 = String.format("INSERT INTO `order_items`(`order_id`, `product_id`) VALUES (%s, %s)", orderId, integer);
+                            try {
+                                getDatabaseConnection().createStatement().executeUpdate(query2);
+                            } catch (Exception ex) {
+                                throw new DatabaseConnectionException(ex);
+                            }
+                        });
+
+            } catch (Exception ex) {
+                throw new DatabaseConnectionException(ex);
+            }
+        }
+    }
+
+
     private static class SelectInventory extends BasicDao {
-
-
 
         private final String databaseName;
         private final String tableName;
@@ -155,6 +223,77 @@ public class DBMigration {
                 }
 
                 return results;
+            } catch (Exception ex) {
+                throw new RuntimeException("Database migration failed");
+            }
+        }
+    }
+
+    private static class SelectOrders extends BasicDao {
+
+        @Override
+        protected String databaseName() {
+            return "orderinfo";
+        }
+
+        public List<Map<String, Object>> selectAll() {
+            List<Map<String, Object>> results = new ArrayList<>();
+
+            try {
+                ResultSet resultSet = getDatabaseConnection().createStatement().executeQuery("SELECT * FROM `orders`");
+
+                while (resultSet.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put(ID, resultSet.getInt("order_id"));
+                    row.put(DATE, resultSet.getTimestamp("order_date"));
+                    row.put(FIRST_NAME, resultSet.getString("first_name"));
+                    row.put(LAST_NAME, resultSet.getString("last_name"));
+                    row.put(ADDRESS, resultSet.getString("address"));
+                    row.put(PHONE, resultSet.getString("phone"));
+                    row.put(TOTAL_COST, resultSet.getBigDecimal("total_cost"));
+                    row.put(SHIPPED, resultSet.getBoolean("shipped"));
+
+                    String orderTable = resultSet.getString("ordertable");
+                    String query = String.format("SELECT * FROM `%s`", orderTable);
+                    ResultSet rs2 = getDatabaseConnection().createStatement().executeQuery(query);
+                    List<String> codes = new ArrayList<>();
+                    while (rs2.next()) {
+                        codes.add(rs2.getString("product_id"));
+                    }
+                    row.put(CODE, codes);
+
+                    results.add(row);
+                }
+
+                return results;
+            } catch (Exception ex) {
+                throw new RuntimeException("Database migration failed");
+            }
+        }
+    }
+
+    private static class ProductCodeToId extends BasicDao {
+
+        private final String code;
+
+        public ProductCodeToId(String code) {
+            this.code = code;
+        }
+
+        @Override
+        protected String databaseName() {
+            return "eep_leaftech";
+        }
+
+        public int find() {
+            try {
+                String query = String.format("SELECT `id` FROM `products` WHERE `code` = '%s'", code);
+                ResultSet rs = getDatabaseConnection().createStatement().executeQuery(query);
+
+                if (rs.next())
+                    return rs.getInt("id");
+
+                throw new RuntimeException("Product code to id failed.");
             } catch (Exception ex) {
                 throw new RuntimeException("Database migration failed");
             }
