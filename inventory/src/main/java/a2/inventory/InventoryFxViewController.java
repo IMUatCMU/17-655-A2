@@ -173,7 +173,7 @@ public class InventoryFxViewController implements Initializable {
             return;
         }
 
-        form.setCode(inventoryListView.getSelectionModel().getSelectedItem().getCode());
+        form.setId(inventoryListView.getSelectionModel().getSelectedItem().getId());
         try {
             inventoryController.deleteItem(form);
             ModalController.createModal("Success",
@@ -201,7 +201,7 @@ public class InventoryFxViewController implements Initializable {
             return;
         }
 
-        form.setCode(inventoryListView.getSelectionModel().getSelectedItem().getCode());
+        form.setId(inventoryListView.getSelectionModel().getSelectedItem().getId());
 
         try {
             inventoryController.decrementInventory(form);

@@ -10,31 +10,32 @@ DROP TABLE IF EXISTS `users`;
 DROP TABLE IF EXISTS `security_audits`;
 
 CREATE TABLE `orders` (
-        `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-        `date` varchar(30),
-        `first_name` varchar(20),
-        `last_name` varchar(20),
-        `address` varchar(80),
-        `phone` varchar(15),
-        `message` varchar(255),
-        `total_cost` float(10,2),
-        `shipped` tinyint(1),
-        PRIMARY KEY (`id`))
- ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `date` varchar(30),
+  `first_name` varchar(20),
+  `last_name` varchar(20),
+  `address` varchar(80),
+  `phone` varchar(15),
+  `message` varchar(255),
+  `total_cost` float(10,2),
+  `shipped` tinyint(1),
+  PRIMARY KEY (`id`))
+  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `order_items` (
-                    `order_id` int(10) unsigned NOT NULL,
-                    `product_id` varchar(10) NOT NULL,
-                    INDEX `product_id` (`product_id`))
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `order_id` int(10) unsigned NOT NULL,
+  `product_id` int(10) unsigned NOT NULL,
+  INDEX `idx_item` (`order_id`, `product_id`))
+  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `products` (`id` varchar(10) NOT NULL,
-                       `description` varchar(80),
-                       `quantity` int,
-                       `price` float(10,2),
-                       `type` varchar(10), PRIMARY KEY (`id`),
-                       INDEX `type` (`type`))
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `products` (`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+                         `code` varchar(10) NOT NULL,
+                         `description` varchar(80),
+                         `quantity` int,
+                         `price` float(10,2),
+                         `type` varchar(10), PRIMARY KEY (`id`),
+  INDEX `type` (`type`))
+  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `order_items` ADD FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ;
 ALTER TABLE `order_items` ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);

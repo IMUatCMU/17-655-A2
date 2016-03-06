@@ -54,7 +54,8 @@ public class ShippingDao extends BasicDao implements AppBean {
 
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("SELECT `p`.`id` AS 'product_id', " +
+            String query = String.format("SELECT `p`.`id` AS `product_id`, " +
+                    "`p`.`code` AS 'product_code', " +
                     "`p`.`description` AS `description`, " +
                     "`p`.`price` AS 'item_price' " +
                     "FROM `order_items` AS `oi` INNER JOIN `products` AS `p` ON `oi`.`product_id` = `p`.`id` " +
@@ -63,7 +64,8 @@ public class ShippingDao extends BasicDao implements AppBean {
 
             while (resultSet.next()) {
                 OrderItem orderItem = new OrderItem();
-                orderItem.setProductId(resultSet.getString("product_id"));
+                orderItem.setProductId(resultSet.getInt("product_id"));
+                orderItem.setCode(resultSet.getString("product_code"));
                 orderItem.setDescription(resultSet.getString("description"));
                 orderItem.setUnitPrice(resultSet.getBigDecimal("item_price"));
                 results.add(orderItem);

@@ -22,10 +22,26 @@ public class InventoryDao extends BasicDao implements AppBean {
         return "eep_leaftech";
     }
 
-    public long countForInventory(String code) {
+    public long countForInventory(Integer id) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("SELECT SUM(`quantity`) FROM `products` WHERE `id` = '%s'", code);
+            String query = String.format("SELECT SUM(`quantity`) FROM `products` WHERE `id` = %s", id);
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                return resultSet.getLong(1);
+            }
+        } catch (Exception ex) {
+            throw new DatabaseConnectionException(ex);
+        }
+
+        return 0l;
+    }
+
+    public long countForInventory(String code, String type) {
+        try {
+            Statement statement = getDatabaseConnection().createStatement();
+            String query = String.format("SELECT SUM(`quantity`) FROM `products` WHERE `code` = '%s' AND `type` = '%s'", code, type);
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
@@ -41,7 +57,7 @@ public class InventoryDao extends BasicDao implements AppBean {
     public void insertInventory(String code, String description, String quantity, String price, Product product) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("INSERT INTO `products`(`id`, `description`, `quantity`, `price`, `type`) VALUES ('%s', '%s', %s, %s, '%s')",
+            String query = String.format("INSERT INTO `products`(`code`, `description`, `quantity`, `price`, `type`) VALUES ('%s', '%s', %s, %s, '%s')",
                     code, description, quantity, price, product.getDatabaseValue());
             statement.executeUpdate(query);
         } catch (Exception ex) {
@@ -49,20 +65,20 @@ public class InventoryDao extends BasicDao implements AppBean {
         }
     }
 
-    public void deleteInventory(String code) {
+    public void deleteInventory(int id) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("DELETE FROM `products` WHERE `id` = '%s'", code);
+            String query = String.format("DELETE FROM `products` WHERE `id` = %s", id);
             statement.executeUpdate(query);
         } catch (Exception ex) {
             throw new DatabaseConnectionException(ex);
         }
     }
 
-    public void decrementInventory(String code) {
+    public void decrementInventory(int id) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("UPDATE `products` SET `quantity` = `quantity` - 1 WHERE `id` = '%s'", code);
+            String query = String.format("UPDATE `products` SET `quantity` = `quantity` - 1 WHERE `id` = %s", id);
             statement.executeUpdate(query);
         } catch (Exception ex) {
             throw new DatabaseConnectionException(ex);
@@ -79,10 +95,12 @@ public class InventoryDao extends BasicDao implements AppBean {
 
             while (resultSet.next()) {
                 Inventory inventory = new Inventory();
-                inventory.setCode(resultSet.getString("id"));
+                inventory.setId(resultSet.getInt("id"));
+                inventory.setCode(resultSet.getString("code"));
                 inventory.setDescription(resultSet.getString("description"));
                 inventory.setQuantity(resultSet.getLong("quantity"));
                 inventory.setPrice(resultSet.getBigDecimal("price"));
+                inventory.setProduct(Product.fromDatabaseValue(resultSet.getString("type")));
                 results.add(inventory);
             }
 

@@ -51,8 +51,7 @@ public class InventoryController implements AppBean {
     }
 
     public void addItem(AddItemForm addItemForm) {
-        long count = 0;
-        count = inventoryDao.countForInventory(addItemForm.getCode());
+        long count = inventoryDao.countForInventory(addItemForm.getCode(), addItemForm.getProduct().getDatabaseValue());
 
         if (count > 0)
             throw new DuplicateItemException();
@@ -66,15 +65,15 @@ public class InventoryController implements AppBean {
     }
 
     public void deleteItem(DeleteItemForm form) {
-        inventoryDao.deleteInventory(form.getCode());
+        inventoryDao.deleteInventory(form.getId());
     }
 
     public void decrementInventory(DecrementInventoryForm form) {
-        long currentStock = inventoryDao.countForInventory(form.getCode());
+        long currentStock = inventoryDao.countForInventory(form.getId());
         if (currentStock <= 0)
             throw new NegativeStockException();
 
-        inventoryDao.decrementInventory(form.getCode());
+        inventoryDao.decrementInventory(form.getId());
     }
 
     public List<Inventory> getInventoryForTrees() {

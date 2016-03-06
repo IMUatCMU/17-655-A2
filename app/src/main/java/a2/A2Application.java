@@ -11,6 +11,8 @@ import a2.inventory.InventoryController;
 import a2.inventory.InventoryDao;
 import a2.login.LoginController;
 import a2.login.LoginDao;
+import a2.migration.MigrationController;
+import a2.migration.MigrationDao;
 import a2.order.OrderController;
 import a2.order.OrderDao;
 import a2.shipping.ShippingController;
@@ -82,6 +84,8 @@ public class A2Application extends Application implements AppBean {
         BeanHolder.registry().registerBean(new OrderDao());
         BeanHolder.registry().registerBean(new ShippingController());
         BeanHolder.registry().registerBean(new ShippingDao());
+        BeanHolder.registry().registerBean(new MigrationDao());
+        BeanHolder.registry().registerBean(new MigrationController());
 
         BeanHolder.getAllBeans().forEach(AppBean::afterInitialization);
     }

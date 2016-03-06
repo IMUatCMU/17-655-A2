@@ -22,12 +22,12 @@ public class OrderDao extends BasicDao implements AppBean {
         return "eep_leaftech";
     }
 
-    public void insertOrderDetails(int orderId, String productCode) {
+    public void insertOrderDetails(int orderId, int productId) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
-            String query = String.format("INSERT INTO `order_items`(`order_id`, `product_id`) VALUES (%s, '%s')",
+            String query = String.format("INSERT INTO `order_items`(`order_id`, `product_id`) VALUES (%s, %s)",
                     orderId,
-                    productCode);
+                    productId);
             statement.executeUpdate(query);
         } catch (Exception ex) {
             throw new DatabaseConnectionException(ex);

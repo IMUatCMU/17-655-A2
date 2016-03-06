@@ -6,6 +6,8 @@ import a2.common.exception.DatabaseConnectionException;
 import a2.common.ioc.AppBean;
 import a2.common.ioc.BeanHolder;
 import a2.common.security.*;
+import a2.migration.DBMigration;
+import a2.migration.MigrationController;
 
 import java.util.Date;
 import java.util.regex.Pattern;
@@ -22,16 +24,19 @@ public class LoginController implements AppBean {
     private PasswordEncoder passwordEncoder;
     private ApplicationProperties applicationProperties;
     private LoginDao loginDao;
+    private MigrationController migrationController;
 
     @Override
     public void afterInitialization() {
         passwordEncoder = (PasswordEncoder) BeanHolder.getBean(BCryptPasswordEncoder.class.getSimpleName());
         applicationProperties = (ApplicationProperties) BeanHolder.getBean(ApplicationProperties.class.getSimpleName());
         loginDao = (LoginDao) BeanHolder.getBean(LoginDao.class.getSimpleName());
+        migrationController = (MigrationController) BeanHolder.getBean(MigrationController.class.getSimpleName());
 
         assert passwordEncoder != null;
         assert applicationProperties != null;
         assert loginDao != null;
+        assert migrationController != null;
     }
 
     public LoginFormValidationResult validateForm(LoginForm loginForm) {
@@ -94,6 +99,8 @@ public class LoginController implements AppBean {
             newSessionContext.setAuthentication(record);
             newSessionContext.setMySqlConnection(connection);
             SessionContextHolder.sessionManager().put(newSessionContext);
+
+            migrationController.performMigrationIfNecessary();
 
             loginDao.insertLoginSecurityAudit(record.getUserId(), new Date());
         }

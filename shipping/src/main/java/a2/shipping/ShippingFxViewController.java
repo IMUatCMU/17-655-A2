@@ -69,7 +69,7 @@ public class ShippingFxViewController implements Initializable {
                                 super.updateItem(item, empty);
                                 if (item != null)
                                     setText(String.format("%s : %s",
-                                            item.getProductId(),
+                                            item.getCode(),
                                             item.getDescription()));
                                 else
                                     setText(null);
@@ -110,7 +110,7 @@ public class ShippingFxViewController implements Initializable {
     }
 
     public void selectOrderButtonFired(ActionEvent actionEvent) {
-        if (this.orderListView.getSelectionModel() == null) {
+        if (this.orderListView.getSelectionModel() == null || this.orderListView.getSelectionModel().getSelectedItem() == null) {
             ModalController.createModal("Info",
                     "Please select an order",
                     ((Node) actionEvent.getSource()).getScene().getWindow(),

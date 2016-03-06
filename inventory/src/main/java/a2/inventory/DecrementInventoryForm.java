@@ -6,13 +6,13 @@ package a2.inventory;
  */
 public class DecrementInventoryForm {
 
-    private String code;
+    private Integer id;
 
-    public String getCode() {
-        return code;
+    public Integer getId() {
+        return id;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

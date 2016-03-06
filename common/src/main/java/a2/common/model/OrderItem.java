@@ -8,16 +8,25 @@ import java.math.BigDecimal;
  */
 public class OrderItem {
 
-    private String productId;
+    private Integer productId;
+    private String code;
     private String description;
     private BigDecimal unitPrice;
 
-    public String getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getDescription() {

@@ -1,5 +1,7 @@
 package a2.common.security;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * MySQL connection parameters for the current session.
  *
@@ -35,7 +37,8 @@ public class MySqlConnection {
     }
 
     public String getConnectionUrl(String database) {
-        assert database != null && database.length() > 0;
+        if (StringUtils.isEmpty(database))
+            return getConnectionUrl();
 
         return String.format("jdbc:mysql://%s:%s/%s",
                 hostAddress,

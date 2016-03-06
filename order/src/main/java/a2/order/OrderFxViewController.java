@@ -117,7 +117,7 @@ public class OrderFxViewController implements Initializable {
     }
 
     public void addToOrderButtonFired(ActionEvent actionEvent) {
-        if (this.inventoryListView.getSelectionModel() == null) {
+        if (this.inventoryListView.getSelectionModel() == null || this.inventoryListView.getSelectionModel().getSelectedItem() == null) {
             ModalController.createModal("Error",
                     "Please select an inventory item to add to order.",
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
@@ -127,8 +127,10 @@ public class OrderFxViewController implements Initializable {
         }
 
         Inventory inventory = this.inventoryListView.getSelectionModel().getSelectedItem();
+
         OrderItem orderItem = new OrderItem();
-        orderItem.setProductId(inventory.getCode());
+        orderItem.setProductId(inventory.getId());
+        orderItem.setCode(inventory.getCode());
         orderItem.setDescription(inventory.getDescription());
         orderItem.setUnitPrice(inventory.getPrice());
 

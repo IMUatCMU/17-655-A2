@@ -44,7 +44,7 @@ public class ShippingController implements AppBean {
 
         order.getOrderItems().forEach(orderItem -> {
             DecrementInventoryForm form = new DecrementInventoryForm();
-            form.setCode(orderItem.getProductId());
+            form.setId(orderItem.getProductId());
             inventoryController.decrementInventory(form);
         });
     }
