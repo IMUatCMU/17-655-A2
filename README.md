@@ -31,6 +31,8 @@ mysql -u $dbuser -p $dbpass < schema.sql
 
 The above command assumes `$dbuser` is the username and `$dbpass` is the password. If more configuration options are needs, please consult [MySQL online manual](https://dev.mysql.com/doc/refman/5.7/en/mysql-batch-commands.html).
 
+Initially, there will be four users in the database. `inventoryuser` can only access the inventory app. `orderuser` can only access the order app. `shippinguser` can only access the shipping app. `admin` can access all apps. All four users have the same password `12345`.
+
 __To execute on Windows(x64)__
 
 Double click the `app.exe` inside the `distribution` folder.
