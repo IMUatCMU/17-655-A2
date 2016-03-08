@@ -4,11 +4,11 @@ This is the "read me" documentation for assignment 2. It explains how to execute
 
 ## How to execute the application
 
-`application.properties` file and database initial data needs to be prepared before execution.
+`application.properties` file and initial database data need to be prepared for execution.
 
 __Prepare application.properties__
 
-The application requires `application.properties` file, which contains configuration parameters to mysql database, in order to run. Before running the system, please fill out the `application.properties` in the `distribution` folder to properly reflect the configuration of your MySQL database.
+The application requires `application.properties` file, which contains configuration parameters to MySql database, to run. Before running the system, please fill out the `application.properties` in the `distribution` folder to properly reflect the configuration of your MySQL database.
 
 A sample `application.properties` file content will look like:
 
@@ -65,11 +65,11 @@ C://Java/bin/java.exe app.jar D://
 
 __Overview__
 
-The application is build with `Java8 SDK`. It's a desktop application utilizing `JavaFX` GUI technologies.
+The application is built with `Java8 SDK`. It's a desktop application utilizing `JavaFX` GUI technologies.
 
 __Building the source code__
 
-The application uses [Apache Maven 3.3.3](https://maven.apache.org) as its build system. The application can be build with command:
+The application uses [Apache Maven 3.3.3](https://maven.apache.org) as its build system. The application can be built with command:
 
 ```
 mkdir workspace && cd workspace
@@ -82,7 +82,7 @@ cd 17-655-A2
 mvn clean install
 ```
 
-The above commands downloads an external dependency (not available in Maven Central) from Github and installs it into your local Maven cache. Then it downloads this project's source code and builds it.
+The above commands download an external dependency (not available in Maven Central) from Github and installs it into your local Maven cache. Then it downloads this project's source code and builds it.
 
 The file jar file can be found in `17-655-A2/app/target/jfx/app/app-1.0-jfx.jar`. Before executing this jar file, please consult the previous section for preparation work.
 
