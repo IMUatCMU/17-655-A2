@@ -14,6 +14,10 @@ import javafx.stage.Window;
 import java.util.function.Function;
 
 /**
+ * Utility controller to create a new modal UI. Since the presentation of UI breaks the synchronous
+ * execution, the modal controller accepts a {@link Runnable} callback to be executed after user
+ * clicked 'OK'.
+ *
  * @since 1.0.0
  */
 public class ModalController {
