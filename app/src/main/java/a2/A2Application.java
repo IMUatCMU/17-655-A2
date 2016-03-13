@@ -31,18 +31,44 @@ import java.util.Date;
 import java.util.Properties;
 
 /**
+ * This is the entry point for the A2 assignment system. It kick-starts the JavaFX application through
+ * the main method.
+ *
+ * It is created as a {@link Application} subclass, hence it will receive JavaFX
+ * lifecycle callbacks.
+ *
+ * It is also registered as an {@link AppBean}, which will receive container lifecycle callbacks in
+ * order to grab its dependencies.
+ *
  * @since 1.0.0
  */
 public class A2Application extends Application implements AppBean {
 
+    /**
+     * Cache application arguments used to extract the path of the configuration file.
+     */
     private static String[] applicationArgs;
+
+    /**
+     * Login data access
+     */
     private LoginDao loginDao;
 
+    /**
+     * Acquire dependencies
+     */
     @Override
     public void afterInitialization() {
         this.loginDao = (LoginDao) BeanHolder.getBean(LoginDao.class.getSimpleName());
     }
 
+    /**
+     * Read 'application.properties' file from the provided location and parse it into
+     * a {@link Properties} object.
+     *
+     * @param location
+     * @return
+     */
     private Properties readProperties(String location) {
         Properties prop = new Properties();
         InputStream input = null;
@@ -63,15 +89,24 @@ public class A2Application extends Application implements AppBean {
         return prop;
     }
 
+    /**
+     * JavaFX lifecycle callback for initialization. Here we register all beans (dependencies) in
+     * the system and give them a callback so that they know dependencies are all prepared and ready
+     * to be grabbed.
+     *
+     * @throws Exception
+     */
     @Override
     public void init() throws Exception {
         super.init();
 
+        // require 'application.properties' location argument
         if (Arrays.asList(applicationArgs).size() < 1) {
             System.out.println("Please provide the first argument as the location for properties file.");
             System.exit(-1);
         }
 
+        // register beans that implemented AppBean interface
         BeanHolder.registry().registerBean(this);
         BeanHolder.registry().registerBean(new ApplicationProperties(readProperties(Arrays.asList(applicationArgs).get(0))));
         BeanHolder.registry().registerBean(new LoginController());
@@ -87,9 +122,17 @@ public class A2Application extends Application implements AppBean {
         BeanHolder.registry().registerBean(new MigrationDao());
         BeanHolder.registry().registerBean(new MigrationController());
 
+        // notify the callback so all beans can grab reference to their dependencies
         BeanHolder.getAllBeans().forEach(AppBean::afterInitialization);
     }
 
+    /**
+     * JavaFX lifecycle callback for application start event. Here we construct the UI and render
+     * the login screen
+     *
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
@@ -99,6 +142,12 @@ public class A2Application extends Application implements AppBean {
         primaryStage.show();
     }
 
+    /**
+     * JavaFX lifecycle callback for application stop event. Here we clear the session context
+     * and audit the logout event for the authenticated user.
+     *
+     * @throws Exception
+     */
     @Override
     public void stop() throws Exception {
         Authentication authentication = SessionContextHolder.getAuthentication();
@@ -110,6 +159,10 @@ public class A2Application extends Application implements AppBean {
         super.stop();
     }
 
+    /**
+     * Cache the arguments and launch the JavaFX application
+     * @param args
+     */
     public static void main(String[] args) {
         applicationArgs = args;
         launch(args);
