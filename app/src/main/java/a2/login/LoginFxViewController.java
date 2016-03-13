@@ -38,17 +38,31 @@ public class LoginFxViewController implements Initializable, AppBean {
 
     private LoginController loginController;
 
+    /**
+     * Lifecycle callback method provided by JavaFX. Here we can safely set the default status of
+     * the controls and grab dependency beans.
+     *
+     * @param location
+     * @param resources
+     */
     public void initialize(URL location, ResourceBundle resources) {
         resetAllControls();
         loginController = (LoginController) BeanHolder.getBean(LoginController.class.getSimpleName());
     }
 
+    /**
+     * User clicked Login
+     *
+     * @param actionEvent
+     */
     public void loginButtonFired(ActionEvent actionEvent) {
+        // load control data into form
         LoginForm loginForm = new LoginForm();
         loginForm.setUserName(userNameTextField.getText());
         loginForm.setPassword(passwordTextField.getText());
         loginForm.setDatabaseAddress(databaseAddressTextField.getText());
 
+        // validate user data, display error if not valid
         LoginFormValidationResult validationResult = loginController.validateForm(loginForm);
         if (!validationResult.isValid()) {
             if (validationResult.getMessages().containsKey(LoginForm.KEY_USERNAME)) {
@@ -69,8 +83,12 @@ public class LoginFxViewController implements Initializable, AppBean {
             return;
         }
 
+        // call business logic to log user in
         try {
+            // do authentication
             loginController.authenticate(loginForm);
+
+            // display modal if success and launch the choice UI when user acknowledges
             ModalController.createModal(
                     "Success",
                     "You have been logged in",
@@ -78,12 +96,14 @@ public class LoginFxViewController implements Initializable, AppBean {
                     () -> launchNextScreen((Stage) ((Node) actionEvent.getSource()).getScene().getWindow()));
 
         } catch (AuthenticationFailedException ex) {
+            // display modal if authentication failed.
             ModalController.createModal(
                     "Error",
                     "Your credentials did not match the records",
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
                     () -> {});
         } catch (DatabaseConnectionException ex2) {
+            // display modal if connection failed.
             ModalController.createModal(
                     "Error",
                     "Could not contact database",
@@ -92,10 +112,20 @@ public class LoginFxViewController implements Initializable, AppBean {
         }
     }
 
+    /**
+     * User clicked 'Reset' button
+     *
+     * @param actionEvent
+     */
     public void resetButtonFired(ActionEvent actionEvent) {
         resetAllControls();
     }
 
+    /**
+     * Prepare the choiec UI and launch it.
+     *
+     * @param primaryStage
+     */
     public void launchNextScreen(Stage primaryStage) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/choice.fxml"));
@@ -109,6 +139,9 @@ public class LoginFxViewController implements Initializable, AppBean {
 
     }
 
+    /**
+     * Utility method to reset all UI controls.
+     */
     private void resetAllControls() {
         userNameTextField.setText("");
         passwordTextField.setText("");

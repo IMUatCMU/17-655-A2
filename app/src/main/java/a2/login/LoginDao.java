@@ -12,7 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @author Weinan Qiu
+ * Data access object for `users` and `security_audit` table.
+ *
  * @since 1.0.0
  */
 public class LoginDao extends BasicDao implements AppBean {
@@ -22,6 +23,12 @@ public class LoginDao extends BasicDao implements AppBean {
         return "eep_leaftech";
     }
 
+    /**
+     * Get user information by username
+     *
+     * @param userName
+     * @return
+     */
     public Authentication getAuthentication(String userName) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
@@ -52,6 +59,12 @@ public class LoginDao extends BasicDao implements AppBean {
         }
     }
 
+    /**
+     * Audit login event
+     *
+     * @param userId
+     * @param auditTime
+     */
     public void insertLoginSecurityAudit(String userId, Date auditTime) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
@@ -63,6 +76,12 @@ public class LoginDao extends BasicDao implements AppBean {
         }
     }
 
+    /**
+     * Audit logout event.
+     *
+     * @param userId
+     * @param auditTime
+     */
     public void insertLogoutSecurityAudit(String userId, Date auditTime) {
         try {
             Statement statement = getDatabaseConnection().createStatement();

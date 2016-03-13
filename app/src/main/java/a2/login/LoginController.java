@@ -26,6 +26,9 @@ public class LoginController implements AppBean {
     private LoginDao loginDao;
     private MigrationController migrationController;
 
+    /**
+     * Acquire dependencies
+     */
     @Override
     public void afterInitialization() {
         passwordEncoder = (PasswordEncoder) BeanHolder.getBean(BCryptPasswordEncoder.class.getSimpleName());
@@ -39,6 +42,11 @@ public class LoginController implements AppBean {
         assert migrationController != null;
     }
 
+    /**
+     * Validate the login form for any missing or invalid information
+     * @param loginForm
+     * @return
+     */
     public LoginFormValidationResult validateForm(LoginForm loginForm) {
         assert loginForm != null;
 
@@ -64,7 +72,17 @@ public class LoginController implements AppBean {
         return validationResult;
     }
 
+    /**
+     * Perform authentication. This method assumes {@link #validateForm(LoginForm)} passes.
+     *
+     * @param loginForm
+     */
     public void authenticate(LoginForm loginForm) {
+
+        // Construct the session context first (we will replace it later) and save it to the session manager.
+        // It is necessary since for the current application, users are providing MySQL connection IP, which
+        // is need to connect to database and retrieve authentication information. We can only do this by
+        // saving connection details to thread first and have the DAO read it.
         Authentication authentication = new Authentication(loginForm.getUserName(), passwordEncoder.encoder(loginForm.getPassword()));
         MySqlConnection connection = new MySqlConnection(
                 loginForm.getDatabaseAddress(),
@@ -78,6 +96,7 @@ public class LoginController implements AppBean {
         sessionContext.setMySqlConnection(connection);
         SessionContextHolder.sessionManager().put(sessionContext);
 
+        // actually retrieve authentication information from database and compare
         boolean authenticationSuccess = false;
         Authentication record;
         try {
@@ -91,6 +110,9 @@ public class LoginController implements AppBean {
             throw new AuthenticationFailedException(null);
         }
 
+        // clear session context if authentication failed.
+        // create new session context (as authenticated) and replace the previously (temporarily)
+        // stored one.
         if (!authenticationSuccess) {
             SessionContextHolder.sessionManager().remove();
             throw new AuthenticationFailedException(null);
@@ -100,8 +122,10 @@ public class LoginController implements AppBean {
             newSessionContext.setMySqlConnection(connection);
             SessionContextHolder.sessionManager().put(newSessionContext);
 
+            // perform migration if necessary
             migrationController.performMigrationIfNecessary();
 
+            // audit this login
             loginDao.insertLoginSecurityAudit(record.getUserId(), new Date());
         }
     }
