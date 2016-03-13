@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- * @author Weinan Qiu
+ * View controller for the shipping app.
+ *
  * @since 1.0.0
  */
 public class ShippingFxViewController implements Initializable {
@@ -39,6 +40,12 @@ public class ShippingFxViewController implements Initializable {
 
     private ShippingController shippingController;
 
+    /**
+     * Initialize UI control state and grab dependencies.
+     *
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.shippingController = (ShippingController) BeanHolder.getBean(ShippingController.class.getSimpleName());
@@ -80,6 +87,11 @@ public class ShippingFxViewController implements Initializable {
         resetAllControls();
     }
 
+    /**
+     * User clicked 'pending orders'
+     *
+     * @param actionEvent
+     */
     public void showPendingOrderButtonFired(ActionEvent actionEvent) {
         List<Order> pendingOrders = shippingController.getPendingOrders();
         if (pendingOrders == null || pendingOrders.size() == 0) {
@@ -90,10 +102,16 @@ public class ShippingFxViewController implements Initializable {
             return;
         }
 
+        // update list view
         this.orderListView.setItems(null);
         this.orderListView.setItems(FXCollections.observableList(pendingOrders));
     }
 
+    /**
+     * User clicked 'shipped orders'
+     *
+     * @param actionEvent
+     */
     public void showShippedOrdersButtonFired(ActionEvent actionEvent) {
         List<Order> shippedOrders = shippingController.getShippedOrders();
         if (shippedOrders == null || shippedOrders.size() == 0) {
@@ -105,10 +123,16 @@ public class ShippingFxViewController implements Initializable {
             return;
         }
 
+        // update list view
         this.orderListView.setItems(null);
         this.orderListView.setItems(FXCollections.observableList(shippedOrders));
     }
 
+    /**
+     * User clicked 'select order'
+     *
+     * @param actionEvent
+     */
     public void selectOrderButtonFired(ActionEvent actionEvent) {
         if (this.orderListView.getSelectionModel() == null || this.orderListView.getSelectionModel().getSelectedItem() == null) {
             ModalController.createModal("Info",
@@ -118,9 +142,11 @@ public class ShippingFxViewController implements Initializable {
             return;
         }
 
+        // load order items
         Order order = this.orderListView.getSelectionModel().getSelectedItem();
         this.shippingController.loadOrderItems(order);
 
+        // render order summary
         firstNameLabel.setText(order.getFirstName());
         lastNameLabel.setText(order.getLastName());
         phoneLabel.setText(order.getPhone());
@@ -128,10 +154,16 @@ public class ShippingFxViewController implements Initializable {
         orderDateLabel.setText(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(order.getOrderDate()));
         messageLabel.setText(order.getMessage());
 
+        // populate list view with order items
         this.orderItemsListView.setItems(null);
         this.orderItemsListView.setItems(FXCollections.observableList(order.getOrderItems()));
     }
 
+    /**
+     * User clicked 'ship'
+     *
+     * @param actionEvent
+     */
     public void markAsShippedButtonFired(ActionEvent actionEvent) {
         if (this.orderListView.getSelectionModel() == null) {
             ModalController.createModal("Info",

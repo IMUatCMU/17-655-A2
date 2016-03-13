@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Weinan Qiu
+ * Data access object for the orders table, mostly doing shipping related jobs.
+ *
  * @since 1.0.0
  */
 public class ShippingDao extends BasicDao implements AppBean {
@@ -22,6 +23,12 @@ public class ShippingDao extends BasicDao implements AppBean {
         return "eep_leaftech";
     }
 
+    /**
+     * List all shipped or un-shipped orders.
+     *
+     * @param shipped
+     * @return
+     */
     public List<Order> queryOrders(boolean shipped) {
         List<Order> results = new ArrayList<>();
 
@@ -49,6 +56,12 @@ public class ShippingDao extends BasicDao implements AppBean {
         }
     }
 
+    /**
+     * List all order items for a given order.
+     *
+     * @param orderId
+     * @return
+     */
     public List<OrderItem> queryOrderItems(int orderId) {
         List<OrderItem> results = new ArrayList<>();
 
@@ -77,6 +90,12 @@ public class ShippingDao extends BasicDao implements AppBean {
         }
     }
 
+    /**
+     * Update order status to shipped or un-shipped.
+     *
+     * @param orderId
+     * @param shipped
+     */
     public void updateOrderShippingStatus(int orderId, boolean shipped) {
         try {
             Statement statement = getDatabaseConnection().createStatement();

@@ -7,7 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Weinan Qiu
+ * Model for a customer order
+ *
  * @since 1.0.0
  */
 public class Order {
