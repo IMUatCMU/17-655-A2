@@ -3,6 +3,8 @@ package a2.common.model;
 import java.math.BigDecimal;
 
 /**
+ * Order item model. Note this model does not handle quantity. The notion of quantity is expressed
+ * as having multiple instance of this model.
  *
  * @since 1.0.0
  */

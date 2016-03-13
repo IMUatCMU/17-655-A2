@@ -4,7 +4,8 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * @author Weinan Qiu
+ * Product type enumeration
+ *
  * @since 1.0.0
  */
 public enum Product {
