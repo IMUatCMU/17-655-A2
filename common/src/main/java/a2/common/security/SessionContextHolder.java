@@ -1,7 +1,9 @@
 package a2.common.security;
 
 /**
- * Holder object for the {@link SessionManager} that implements singleton pattern.
+ * Holder object for the {@link SessionManager} that implements singleton pattern. Since the
+ * {@link Authentication} object has a 1-to-1 relation with the current thread, having it static scoped
+ * will give us easy access.
  *
  * @since 1.0.0
  */
