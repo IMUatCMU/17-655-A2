@@ -11,13 +11,17 @@ import org.w3c.dom.stylesheets.LinkStyle;
 import java.util.List;
 
 /**
- * @author Weinan Qiu
+ * Business controller for the inventory app.
+ *
  * @since 1.0.0
  */
 public class InventoryController implements AppBean {
 
     private InventoryDao inventoryDao;
 
+    /**
+     * Grab dependencies
+     */
     @Override
     public void afterInitialization() {
         this.inventoryDao = (InventoryDao) BeanHolder.getBean(InventoryDao.class.getSimpleName());
@@ -25,6 +29,12 @@ public class InventoryController implements AppBean {
         assert inventoryDao != null;
     }
 
+    /**
+     * Validate add item request
+     *
+     * @param addItemForm
+     * @return
+     */
     public AddItemValidationResult validateAddItem(AddItemForm addItemForm) {
         AddItemValidationResult result = new AddItemValidationResult();
         result.setForm(addItemForm);
@@ -50,12 +60,19 @@ public class InventoryController implements AppBean {
         return result;
     }
 
+    /**
+     * Add a new inventory item, assuming {@link #validateAddItem(AddItemForm)} passed.
+     *
+     * @param addItemForm
+     */
     public void addItem(AddItemForm addItemForm) {
+        // check if it already exists
         long count = inventoryDao.countForInventory(addItemForm.getCode(), addItemForm.getProduct().getDatabaseValue());
 
         if (count > 0)
             throw new DuplicateItemException();
 
+        // insert inventory
         inventoryDao.insertInventory(
                 addItemForm.getCode(),
                 addItemForm.getDescription(),
@@ -64,10 +81,20 @@ public class InventoryController implements AppBean {
                 addItemForm.getProduct());
     }
 
+    /**
+     * Delete inventory
+     *
+     * @param form
+     */
     public void deleteItem(DeleteItemForm form) {
         inventoryDao.deleteInventory(form.getId());
     }
 
+    /**
+     * Decrement inventory
+     *
+     * @param form
+     */
     public void decrementInventory(DecrementInventoryForm form) {
         long currentStock = inventoryDao.countForInventory(form.getId());
         if (currentStock <= 0)

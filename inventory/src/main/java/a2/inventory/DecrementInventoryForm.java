@@ -1,7 +1,8 @@
 package a2.inventory;
 
 /**
- * @author Weinan Qiu
+ * DTO form to decrement inventory
+ *
  * @since 1.0.0
  */
 public class DecrementInventoryForm {

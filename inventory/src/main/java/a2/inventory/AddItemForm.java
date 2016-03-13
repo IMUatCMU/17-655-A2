@@ -3,7 +3,8 @@ package a2.inventory;
 import a2.common.model.Product;
 
 /**
- * @author Weinan Qiu
+ * DTO form to add inventory item
+ *
  * @since 1.0.0
  */
 public class AddItemForm {

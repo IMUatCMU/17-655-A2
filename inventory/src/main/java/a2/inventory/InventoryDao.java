@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Weinan Qiu
+ * Data access object for the products table.
+ *
  * @since 1.0.0
  */
 public class InventoryDao extends BasicDao implements AppBean {
@@ -22,6 +23,12 @@ public class InventoryDao extends BasicDao implements AppBean {
         return "eep_leaftech";
     }
 
+    /**
+     * Count inventory by its id
+     *
+     * @param id
+     * @return
+     */
     public long countForInventory(Integer id) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
@@ -38,6 +45,13 @@ public class InventoryDao extends BasicDao implements AppBean {
         return 0l;
     }
 
+    /**
+     * Count inventory by its code and product type
+     *
+     * @param code
+     * @param type
+     * @return
+     */
     public long countForInventory(String code, String type) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
@@ -54,6 +68,15 @@ public class InventoryDao extends BasicDao implements AppBean {
         return 0l;
     }
 
+    /**
+     * Insert new inventory record
+     *
+     * @param code
+     * @param description
+     * @param quantity
+     * @param price
+     * @param product
+     */
     public void insertInventory(String code, String description, String quantity, String price, Product product) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
@@ -65,6 +88,11 @@ public class InventoryDao extends BasicDao implements AppBean {
         }
     }
 
+    /**
+     * Delete inventory by id
+     *
+     * @param id
+     */
     public void deleteInventory(int id) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
@@ -75,6 +103,11 @@ public class InventoryDao extends BasicDao implements AppBean {
         }
     }
 
+    /**
+     * Decrement inventory stock by id.
+     *
+     * @param id
+     */
     public void decrementInventory(int id) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
@@ -85,6 +118,12 @@ public class InventoryDao extends BasicDao implements AppBean {
         }
     }
 
+    /**
+     * Get all inventories for a specific product type.
+     *
+     * @param product
+     * @return
+     */
     public List<Inventory> getInventoryFor(Product product) {
         List<Inventory> results = new ArrayList<>();
 

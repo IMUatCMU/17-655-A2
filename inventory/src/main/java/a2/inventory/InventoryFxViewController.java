@@ -20,6 +20,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 /**
+ * View controller for the inventory app.
  *
  * @since 1.0.0
  */
@@ -40,6 +41,12 @@ public class InventoryFxViewController implements Initializable {
 
     private InventoryController inventoryController;
 
+    /**
+     * Initialize UI controls state and grab dependencies.
+     *
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ToggleGroup toggleGroup = new ToggleGroup();
@@ -73,6 +80,9 @@ public class InventoryFxViewController implements Initializable {
         assert inventoryController != null;
     }
 
+    /**
+     * Utility to reset UI controls.
+     */
     private void resetControls() {
         Arrays.asList(treesRadio,
                 seedsRadio,
@@ -87,7 +97,14 @@ public class InventoryFxViewController implements Initializable {
                 quantityTextField).forEach(textInputControl -> textInputControl.setText(""));
     }
 
+    /**
+     * User clicked 'add item'
+     *
+     * @param actionEvent
+     */
     public void addItemButtonFired(ActionEvent actionEvent) {
+
+        // create request form
         AddItemForm form = new AddItemForm();
         form.setCode(productIdTextField.getText());
         form.setDescription(productDescriptionTextField.getText());
@@ -108,6 +125,7 @@ public class InventoryFxViewController implements Initializable {
         else if (cultureBoxesRadio.isSelected())
             form.setProduct(Product.CULTUREBOXES);
 
+        // do validation
         AddItemValidationResult validationResult = inventoryController.validateAddItem(form);
         if (!validationResult.isValid()) {
             String compiledMessages = validationResult.getMessages().values().stream().collect(Collectors.joining("\n"));
@@ -117,6 +135,7 @@ public class InventoryFxViewController implements Initializable {
                     () -> {});
         } else {
             try {
+                // add item
                 inventoryController.addItem(form);
                 ModalController.createModal("Success",
                         "Adding the item was successful!",
@@ -136,6 +155,11 @@ public class InventoryFxViewController implements Initializable {
         }
     }
 
+    /**
+     * User clicked 'list item'
+     *
+     * @param actionEvent
+     */
     public void listItemsButtonFired(ActionEvent actionEvent) {
         List<Inventory> inventories = new ArrayList<>();
         if (treesRadio.isSelected())
@@ -163,6 +187,11 @@ public class InventoryFxViewController implements Initializable {
         inventoryListView.setItems(FXCollections.observableList(inventories));
     }
 
+    /**
+     * User clicked 'delete item'
+     *
+     * @param actionEvent
+     */
     public void deleteItemButtonFired(ActionEvent actionEvent) {
         DeleteItemForm form = new DeleteItemForm();
         if (inventoryListView.getSelectionModel().getSelectedItem() == null) {
@@ -191,6 +220,11 @@ public class InventoryFxViewController implements Initializable {
         }
     }
 
+    /**
+     * User clicked 'decrement item'
+     *
+     * @param actionEvent
+     */
     public void decrementButtonFired(ActionEvent actionEvent) {
         DecrementInventoryForm form = new DecrementInventoryForm();
         if (inventoryListView.getSelectionModel().getSelectedItem() == null) {
