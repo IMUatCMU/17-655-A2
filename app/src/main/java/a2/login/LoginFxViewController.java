@@ -4,6 +4,7 @@ import a2.common.exception.AuthenticationFailedException;
 import a2.common.exception.DatabaseConnectionException;
 import a2.common.ioc.AppBean;
 import a2.common.ioc.BeanHolder;
+import a2.common.security.MySqlConnection;
 import a2.common.ui.ModalController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,8 +27,6 @@ import java.util.ResourceBundle;
  * @since 1.0.0
  */
 public class LoginFxViewController implements Initializable, AppBean {
-
-    private static final String DEFAULT_DB_ADDRESS = "192.168.99.100";
 
     @FXML private TextField userNameTextField;
     @FXML private PasswordField passwordTextField;
@@ -150,7 +149,7 @@ public class LoginFxViewController implements Initializable, AppBean {
         passwordErrorLabel.setText("");
         passwordErrorLabel.setVisible(false);
 
-        databaseAddressTextField.setText(DEFAULT_DB_ADDRESS);
+        databaseAddressTextField.setText(MySqlConnection.DEFAULT_HOST_ADDRESS);
         databaseErrorLabel.setText("");
         databaseErrorLabel.setVisible(false);
     }
