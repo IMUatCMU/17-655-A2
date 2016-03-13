@@ -17,13 +17,20 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * @author Weinan Qiu
+ * View Controller for the choice UI.
+ *
  * @since 1.0.0
  */
 public class ChoiceFxViewController implements Initializable {
 
     private ChoiceController choiceController;
 
+    /**
+     * Grab dependency.
+     *
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.choiceController = (ChoiceController) BeanHolder.getBean(ChoiceController.class.getSimpleName());
@@ -31,7 +38,13 @@ public class ChoiceFxViewController implements Initializable {
         assert this.choiceController != null;
     }
 
+    /**
+     * User selected 'Inventory' app
+     *
+     * @param actionEvent
+     */
     public void inventoryButtonFired(ActionEvent actionEvent) {
+        // check permission
         if (!this.choiceController.hasSufficientPermission(Permission.INVENTORY))
             displayInsufficientPermissionModal("Inventory", ((Node) actionEvent.getSource()).getScene().getWindow());
         else {
@@ -42,7 +55,13 @@ public class ChoiceFxViewController implements Initializable {
         }
     }
 
+    /**
+     * User selected 'Order' app
+     *
+     * @param actionEvent
+     */
     public void orderButtonFired(ActionEvent actionEvent) {
+        // check permission
         if (!this.choiceController.hasSufficientPermission(Permission.ORDER))
             displayInsufficientPermissionModal("Order", ((Node) actionEvent.getSource()).getScene().getWindow());
         else {
@@ -53,7 +72,13 @@ public class ChoiceFxViewController implements Initializable {
         }
     }
 
+    /**
+     * User selected 'Shipping' app
+     *
+     * @param actionEvent
+     */
     public void shippingButtonFired(ActionEvent actionEvent) {
+        // check permission
         if (!this.choiceController.hasSufficientPermission(Permission.SHIPPING))
             displayInsufficientPermissionModal("Shipping", ((Node) actionEvent.getSource()).getScene().getWindow());
         else {
@@ -64,6 +89,12 @@ public class ChoiceFxViewController implements Initializable {
         }
     }
 
+    /**
+     * Utility method to show 'permission insufficient' modal UI.
+     *
+     * @param appToAccess
+     * @param owner
+     */
     private void displayInsufficientPermissionModal(String appToAccess, Window owner) {
         ModalController.createModal(
                 "Error",
@@ -72,6 +103,13 @@ public class ChoiceFxViewController implements Initializable {
                 () -> {});
     }
 
+    /**
+     * Prepare one of the 'Inventory', 'Order', 'Shipping' app UI and launches it.
+     *
+     * @param primaryStage
+     * @param title
+     * @param fxmlLocation
+     */
     private void launchNextScreen(Stage primaryStage, String title, String fxmlLocation) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlLocation));

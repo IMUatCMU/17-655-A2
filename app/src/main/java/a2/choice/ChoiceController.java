@@ -6,11 +6,19 @@ import a2.common.security.Permission;
 import a2.common.security.SessionContextHolder;
 
 /**
- * @author Weinan Qiu
+ * Business controller for choice UI.
+ *
  * @since 1.0.0
  */
 public class ChoiceController implements AppBean {
 
+    /**
+     * Provides authorization service for the choice UI. Checks the current authenticated user has
+     * enough permission to access the app with provided permission.
+     *
+     * @param required
+     * @return
+     */
     public boolean hasSufficientPermission(Permission required) {
         Authentication authentication = SessionContextHolder.getAuthentication();
         if (authentication == null || !authentication.isAuthenticated())
