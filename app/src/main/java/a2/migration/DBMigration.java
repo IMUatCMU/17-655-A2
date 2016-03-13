@@ -15,18 +15,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Weinan Qiu
+ * Utility class to perform some database migration jobs. Since this will only run once throughout
+ * the entire life of the application, it isn't registered as a bean. The static method {@link #performMigration()}
+ * takes care of initializing the instance and perform the migration.
+ *
  * @since 1.0.0
  */
 public class DBMigration {
 
+    /**
+     * Key names for the {@link Map} used to carry intermediate query results.
+     */
     public static final String ID = "id";
-
     public static final String DESCRIPTION = "desc";
     public static final String QUANTITY = "quantity";
     public static final String PRICE = "price";
     public static final String TYPE = "type";
-
     public static final String DATE = "date";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
@@ -36,6 +40,9 @@ public class DBMigration {
     public static final String SHIPPED = "shipped";
     public static final String CODE = "code";
 
+    /**
+     * Create instance and perform migration. The only entry point for this class.
+     */
     public static void performMigration() {
         DBMigration migration = new DBMigration();
         migration.doMigrateInventory();
@@ -45,6 +52,10 @@ public class DBMigration {
     private DBMigration() {
     }
 
+    /**
+     * Migrate the inventory, it queries the EEP and LeafTech databases for all their inventories and format
+     * them into the new schema before inserting them all.
+     */
     private void doMigrateInventory() {
         Map<Product, SelectInventory> source = new HashMap<>();
         source.put(Product.TREE, new SelectInventory("inventory", "trees", "product_code", "description", "quantity", "price"));
@@ -76,6 +87,9 @@ public class DBMigration {
                 );
     }
 
+    /**
+     * Migrate the orders, it queries the EEP database and migrate any old orders into the new format.
+     */
     private void doMigrateOrders() {
         new SelectOrders().selectAll()
                 .stream()
@@ -83,8 +97,12 @@ public class DBMigration {
                 .forEach(InsertOrder::insertOrders);
     }
 
+    /**
+     * Utility stateful class that handles inserting an inventory item.
+     */
     private static class InsertInventory extends BasicDao {
 
+        // properties of an inventory
         private final String id;
         private final String description;
         private final BigDecimal price;
@@ -118,6 +136,9 @@ public class DBMigration {
         }
     }
 
+    /**
+     * Utility stateful class that handles inserting a new order
+     */
     private static class InsertOrder extends BasicDao {
 
         private final Map<String, Object> data;
@@ -171,6 +192,9 @@ public class DBMigration {
     }
 
 
+    /**
+     * Utility stateful class handling select of all inventories of a certain category
+     */
     private static class SelectInventory extends BasicDao {
 
         private final String databaseName;
@@ -229,6 +253,9 @@ public class DBMigration {
         }
     }
 
+    /**
+     * Utility stateful class handling select of all orders of a certain category
+     */
     private static class SelectOrders extends BasicDao {
 
         @Override
@@ -272,6 +299,9 @@ public class DBMigration {
         }
     }
 
+    /**
+     * Utility stateful class converting the code of a product to its id.
+     */
     private static class ProductCodeToId extends BasicDao {
 
         private final String code;

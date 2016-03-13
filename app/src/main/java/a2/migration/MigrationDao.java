@@ -8,7 +8,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 /**
- * @author Weinan Qiu
+ * Data access object for database migration. It is mainly responsible for handling CRUD related to
+ * the 'MIGRATION' table.
+ *
  * @since 1.0.0
  */
 public class MigrationDao extends BasicDao implements AppBean {
@@ -18,6 +20,13 @@ public class MigrationDao extends BasicDao implements AppBean {
         return "";
     }
 
+    /**
+     * Check if a certain table exists
+     *
+     * @param dbName
+     * @param tableName
+     * @return
+     */
     public boolean tableExists(String dbName, String tableName) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
@@ -29,6 +38,9 @@ public class MigrationDao extends BasicDao implements AppBean {
         }
     }
 
+    /**
+     * Create MIGRATION table
+     */
     public void createMigrationTable() {
         try {
             getDatabaseConnection().createStatement().executeUpdate("CREATE TABLE `eep_leaftech`.`MIGRATION` (`done` tinyint(1) DEFAULT 0) ENGINE=InnoDB DEFAULT CHARSET=utf8");
@@ -38,6 +50,9 @@ public class MigrationDao extends BasicDao implements AppBean {
         }
     }
 
+    /**
+     * Mark the migration as done
+     */
     public void markMigrationAsDone() {
         try {
             getDatabaseConnection().createStatement().executeUpdate("UPDATE `eep_leaftech`.`MIGRATION` SET `done` = true");
@@ -46,6 +61,9 @@ public class MigrationDao extends BasicDao implements AppBean {
         }
     }
 
+    /**
+     * Check if migration has every been performed
+     */
     public boolean isMigrationDone() {
         try {
             Statement statement = getDatabaseConnection().createStatement();
