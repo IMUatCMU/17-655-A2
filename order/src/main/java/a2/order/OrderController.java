@@ -11,18 +11,28 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Weinan Qiu
+ * Business controller for the order app.
+ *
  * @since 1.0.0
  */
 public class OrderController implements AppBean {
 
     private OrderDao orderDao;
 
+    /**
+     * Grab dependencies
+     */
     @Override
     public void afterInitialization() {
         this.orderDao = (OrderDao) BeanHolder.getBean(OrderDao.class.getSimpleName());
     }
 
+    /**
+     * Validate order submission form
+     *
+     * @param form
+     * @return
+     */
     public OrderFormValidationResult validateOrder(OrderForm form) {
         OrderFormValidationResult result = new OrderFormValidationResult();
         result.setForm(form);
@@ -44,6 +54,13 @@ public class OrderController implements AppBean {
         return result;
     }
 
+    /**
+     * Submit the order. It assumes {@link #validateOrder(OrderForm)} is already passed. It will
+     * call {@link OrderDao} to insert summary record first and then insert details (order items)
+     * record.
+     *
+     * @param form
+     */
     public void submitOrder(OrderForm form) {
         int orderId = orderDao.insertOrderInfo(
                 new Date(),
@@ -57,10 +74,22 @@ public class OrderController implements AppBean {
         form.getOrderItems().forEach(orderItem -> orderDao.insertOrderDetails(orderId, orderItem.getProductId()));
     }
 
+    /**
+     * Calculate the price sum of items in an order
+     *
+     * @param form
+     * @return
+     */
     public BigDecimal calculateTotalPrice(OrderForm form) {
         return calculateTotalPrice(form.getOrderItems());
     }
 
+    /**
+     * Calculate the price sum of items
+     *
+     * @param orderItems
+     * @return
+     */
     public BigDecimal calculateTotalPrice(Collection<OrderItem> orderItems) {
         return orderItems
                 .stream()

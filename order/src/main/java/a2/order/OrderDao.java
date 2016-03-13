@@ -12,7 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @author Weinan Qiu
+ * Data access object for order app.
+ *
  * @since 1.0.0
  */
 public class OrderDao extends BasicDao implements AppBean {
@@ -22,6 +23,12 @@ public class OrderDao extends BasicDao implements AppBean {
         return "eep_leaftech";
     }
 
+    /**
+     * Insert a record to order_items table.
+     *
+     * @param orderId
+     * @param productId
+     */
     public void insertOrderDetails(int orderId, int productId) {
         try {
             Statement statement = getDatabaseConnection().createStatement();
@@ -34,6 +41,19 @@ public class OrderDao extends BasicDao implements AppBean {
         }
     }
 
+    /**
+     * Insert a record to orders table.
+     *
+     * @param orderDate
+     * @param firstName
+     * @param lastName
+     * @param phone
+     * @param address
+     * @param message
+     * @param totalCost
+     * @param shipped
+     * @return
+     */
     public int insertOrderInfo(Date orderDate,
                                 String firstName,
                                 String lastName,

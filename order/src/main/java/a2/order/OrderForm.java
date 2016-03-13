@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Weinan Qiu
+ * DTO for order submission info
+ *
  * @since 1.0.0
  */
 public class OrderForm {

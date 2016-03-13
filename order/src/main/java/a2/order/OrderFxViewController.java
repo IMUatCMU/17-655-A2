@@ -23,7 +23,8 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 /**
- * @author Weinan Qiu
+ * View controller for the order app.
+ *
  * @since 1.0.0
  */
 public class OrderFxViewController implements Initializable {
@@ -40,6 +41,12 @@ public class OrderFxViewController implements Initializable {
     private OrderController orderController;
     private InventoryController inventoryController;
 
+    /**
+     * Initialize control state and grab dependencies
+     *
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         inventoryListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -83,40 +90,78 @@ public class OrderFxViewController implements Initializable {
         resetControls();
     }
 
+    /**
+     * User clicked 'trees' button
+     * @param actionEvent
+     */
     public void treesButtonFired(ActionEvent actionEvent) {
         populateInventoryListView(this.inventoryController.getInventoryForTrees());
     }
 
+    /**
+     * User clicked 'shrubs' button
+     * @param actionEvent
+     */
     public void shrubsButtonFired(ActionEvent actionEvent) {
         populateInventoryListView(this.inventoryController.getInventoryForShrubs());
     }
 
+    /**
+     * User clicked 'seeds' button
+     * @param actionEvent
+     */
     public void seedsButtonFired(ActionEvent actionEvent) {
         populateInventoryListView(this.inventoryController.getInventoryForSeeds());
     }
 
+    /**
+     * User clicked 'processing' button
+     * @param actionEvent
+     */
     public void processingButtonFired(ActionEvent actionEvent) {
         populateInventoryListView(this.inventoryController.getInventoryForProcessing());
     }
 
+    /**
+     * User clicked 'reference material' button
+     * @param actionEvent
+     */
     public void referenceMaterialButtonFired(ActionEvent actionEvent) {
         populateInventoryListView(this.inventoryController.getInventoryForReferenceMaterials());
     }
 
+    /**
+     * User clicked 'genomics' button
+     * @param actionEvent
+     */
     public void genomicsButtonFired(ActionEvent actionEvent) {
         populateInventoryListView(this.inventoryController.getInventoryForGenomics());
     }
 
+    /**
+     * User clicked 'culture boxes' button
+     * @param actionEvent
+     */
     public void cultureBoxesButtonFired(ActionEvent actionEvent) {
         populateInventoryListView(this.inventoryController.getInventoryForCultureBoxes());
     }
 
+    /**
+     * load data into the inventory list UI
+     *
+     * @param inventories
+     */
     private void populateInventoryListView(List<Inventory> inventories) {
         this.inventoryListView.setItems(null);
         inventoryListView.setItems(FXCollections.observableList(inventories));
     }
 
+    /**
+     * User clicked 'add to order' button
+     * @param actionEvent
+     */
     public void addToOrderButtonFired(ActionEvent actionEvent) {
+        // check selection
         if (this.inventoryListView.getSelectionModel() == null || this.inventoryListView.getSelectionModel().getSelectedItem() == null) {
             ModalController.createModal("Error",
                     "Please select an inventory item to add to order.",
@@ -126,6 +171,7 @@ public class OrderFxViewController implements Initializable {
             return;
         }
 
+        // parse the selected inventory as an order item
         Inventory inventory = this.inventoryListView.getSelectionModel().getSelectedItem();
 
         OrderItem orderItem = new OrderItem();
@@ -134,6 +180,7 @@ public class OrderFxViewController implements Initializable {
         orderItem.setDescription(inventory.getDescription());
         orderItem.setUnitPrice(inventory.getPrice());
 
+        // add order item to list
         ObservableList<OrderItem> selectedModel = this.itemsSelectedListView.getItems();
         if (selectedModel == null || selectedModel.size() == 0) {
             selectedModel = FXCollections.observableArrayList();
@@ -141,11 +188,18 @@ public class OrderFxViewController implements Initializable {
         selectedModel.add(orderItem);
         this.itemsSelectedListView.setItems(selectedModel);
 
+        // update total price
         BigDecimal totalPrice = orderController.calculateTotalPrice(selectedModel);
         this.totalCostLabel.setText("$" + new DecimalFormat("#,###.00").format(totalPrice));
     }
 
+    /**
+     * User clicked 'submit order' button
+     * @param actionEvent
+     */
     public void submitOrderButtonFired(ActionEvent actionEvent) {
+
+        // create order submission form
         OrderForm form = new OrderForm();
         form.setFirstName(firstNameTextField.getText());
         form.setLastName(lastNameTextFiedl.getText());
@@ -154,6 +208,7 @@ public class OrderFxViewController implements Initializable {
         form.setMessage(orderMessageTextArea.getText());
         form.setOrderItems(this.itemsSelectedListView.getItems());
 
+        // validate form
         OrderFormValidationResult validationResult = orderController.validateOrder(form);
         if (!validationResult.isValid()) {
             String combinedError = validationResult.getMessages().values().stream().collect(Collectors.joining("\n"));
@@ -164,6 +219,7 @@ public class OrderFxViewController implements Initializable {
             return;
         } else {
             try {
+                // submit order
                 orderController.submitOrder(form);
                 ModalController.createModal("Success",
                         "Order submitted!",
