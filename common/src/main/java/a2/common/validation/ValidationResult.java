@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Weinan Qiu
+ * Base DTO class for all validation results. It shows the validity of the form, the form itself, and
+ * a map of messages.
+ *
  * @since 1.0.0
  */
 public abstract class ValidationResult<T> {
